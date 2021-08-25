@@ -10,6 +10,7 @@ use ark_std::rand::{rngs::StdRng, SeedableRng};
 pub type FqVar = FpVar<Fr>;
 pub type Fq = Fr;
 
+// Prove: x * w = y 
 #[derive(Clone)]
 struct MatmulCircuit {
     x: Vec<Vec<Fq>>,   // public input
@@ -22,9 +23,8 @@ impl ConstraintSynthesizer<Fq> for MatmulCircuit {
         let m = self.x.len();
         let t = self.x[0].len();
         let n = self.y[0].len();
- 
-        println!("{}, {}, {}", m, t, n);
-
+   
+        // matrix multiplication
         for j in 0..n {
             for i in 0..m {
                 let mut tmp_sum = FpVar::<Fq>::new_witness(
@@ -56,14 +56,12 @@ impl ConstraintSynthesizer<Fq> for MatmulCircuit {
 // map i64 to a finite field Fp256
 fn to_fq(x: i64) -> Fq {
     let val:u64 = i64::unsigned_abs(x); 
-    let mut fq: Fq = val.into(); 
-    println!("{:#?}", fq);
+    let mut fq: Fq = val.into();  
     if x< 0 { 
-        // let modu = ark_bls12_381::FrParameters::MODULUS;
+        // let modulus = ark_bls12_381::FrParameters::MODULUS;
         // println!("{:#?}", modu);
-        fq = - fq;   // neg_fq = modu - fq
-    } 
-    println!("{:#?}", fq);
+        fq = - fq;   // neg_fq = modulus - fq
+    }  
     fq
 }
 

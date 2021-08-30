@@ -4,7 +4,7 @@ use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisE
 use ark_bls12_381::{Bls12_381, Fr}; 
 use ark_ff::{Zero}; 
 use ark_groth16::*;
-//use ark_crypto_primitives::snark::*;
+use ark_crypto_primitives::snark::*;
 use ark_std::rand::{rngs::StdRng, SeedableRng};
 
 pub type FqVar = FpVar<Fr>;
@@ -23,6 +23,24 @@ impl ConstraintSynthesizer<Fq> for MatmulCircuit {
         let m = self.x.len();
         let t = self.x[0].len();
         let n = self.y[0].len();
+
+        for i in 0..m { 
+            for j in 0..t {
+                let x_input = FpVar::<Fq>::new_input(
+                    ark_relations::ns!(cs, "new input gadget"), || Ok(self.x[i][j])
+                ).expect("create new input"); 
+            }
+        }
+
+        for i in 0..t { 
+            for j in 0..n {
+                let w_witness = FpVar::<Fq>::new_witness(
+                    ark_relations::ns!(cs, "new witness gadget"), || Ok(self.w[i][j])
+                ).expect("create new witness"); 
+            }
+        }
+
+         
    
         // matrix multiplication
         for j in 0..n {
@@ -31,22 +49,14 @@ impl ConstraintSynthesizer<Fq> for MatmulCircuit {
                     ark_relations::ns!(cs, "zero gadget"), || Ok(Fq::zero())
                 ).expect("create zero ");
                 for k in 0..t {
-                    // calculate the sum of x row i * w col j 
-                    let x_input = FpVar::<Fq>::new_input(
-                        ark_relations::ns!(cs, "new input gadget"), || Ok(self.x[i][k])
-                    ).expect("create new input");  
-
-                    let w_witness = FpVar::<Fq>::new_witness(
-                        ark_relations::ns!(cs, "new witness gadget"), || Ok(self.w[k][j])
-                    ).expect("create new witness"); 
-
-                    tmp_sum += x_input * w_witness; 
+                    // calculate the sum of x row i * w col j  
+                    tmp_sum += self.x[i][k] * self.w[k][j]; 
                 }
                 let y_input = FpVar::<Fq>::new_input(
                     ark_relations::ns!(cs, "new input gadget"), || Ok(self.y[i][j])
                 ).expect("create new input"); 
 
-                y_input.enforce_equal(&tmp_sum).expect("enforce equal: x * w = y");
+                //y_input.enforce_equal(&tmp_sum).expect("enforce equal: x * w = y");
             }
         } 
         Ok(())
@@ -78,7 +88,15 @@ fn main() {
         w : w.clone(),
         y : y.clone(), 
     };
+ 
+    // let params = Groth16::<Bls12_381>::setup(circuit.clone(), &mut rng).unwrap();
+    // println!("set up");
 
+    // let proof =  Groth16::<Bls12_381>::prove(&params.0, circuit.clone(), &mut rng).unwrap(); 
+    // println!("prove");
+
+    // let result = Groth16::<Bls12_381>::verify(&params.1, &statement, &proof).unwrap();
+ 
     let mut statement = Vec::new();
     for i in 0..5 {
         for j in 0..4 {
@@ -87,17 +105,10 @@ fn main() {
     }
     for i in 0..5 {
         for j in 0..3 {
-            statement.push(y[i][j].clone());
+            statement.push(x[i][j].clone());
         } 
     }
-
-    // let params = Groth16::<Bls12_381>::setup(circuit.clone(), &mut rng).unwrap();
-    // println!("set up");
-
-    // let proof =  Groth16::<Bls12_381>::prove(&params.0, circuit.clone(), &mut rng).unwrap(); 
-    // println!("prove");
  
-    // let result = Groth16::<Bls12_381>::verify(&params.1, &statement, &proof).unwrap();
     
     let param = generate_random_parameters::<Bls12_381, _, _>(circuit.clone(), &mut rng).unwrap(); 
     println!("setup");

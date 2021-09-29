@@ -6,8 +6,8 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
-ark-ec = { version = "0.2", features = [ "parallel" ] }
+[dependencies]   
+# ripp dependencies copied from https://github.com/arkworks-rs/ripp/blob/master/benches/Cargo.toml
 ark-ff = { version = "0.2", features = [ "parallel" ] }
 ark-poly = { version = "0.2", features = [ "parallel" ] }
 ark-std = { version = "0.2", features = [ "parallel" ] }
@@ -15,12 +15,17 @@ ark-groth16 = { version = "0.2", features = [ "parallel", "r1cs" ] }
 ark-crypto-primitives = { version = "0.2", features = [ "parallel", "r1cs" ] }
 ark-bls12-381 = { version = "0.2", features = [ "curve" ] }
 ark-ed-on-bls12-381 = "0.2"
-ark-bls12-377 = { version = "0.2", features = [ "curve", "r1cs" ] }
-ark-bw6-761 = "0.2"
+
 
 ark-relations = "0.2"
 ark-r1cs-std = "0.2" 
 
-digest = "0.9" 
 blake2 = "0.9"
 csv = "1.1.3"
+
+# configure the path for ripp library
+ark-inner-products = { path = "./ripp/inner_products" }
+ark-ip-proofs = { path = "./ripp/ip_proofs" }
+ark-dh-commitments = { path = "./ripp/dh_commitments" }
+ 
+  

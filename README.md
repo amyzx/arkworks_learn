@@ -16,14 +16,30 @@ The verifier **V** could verify the proof.
 
 If the result is true, then V could trust P.
 
+
+
+## Description
+
+*main.rs*: it uses groth16 library to generate and verify one proof.
+
+*Cargo.toml*: define all dependencies and libraries used in the project.
+
+*ripp/*: contains the source code copied from [ripp](https://github.com/arkworks-rs/ripp ).
+
+*bin/batch_groth16.rs*: it uses ripp library to aggregate 1024 proofs.
+
+
+
 ## How to run
 
 1. make sure you have **rust** environment
 
-2. run the following command in terminal
+2. run the following command in arkworks_learn directory
 
    ```shell
-   cargo run
+   cargo run --bin arkworks_learn 
+   cargo run --bin batch_groth16
    ```
 
-   
+
+

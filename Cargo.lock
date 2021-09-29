@@ -12,35 +12,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "ark-bls12-377"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb89b97424403ec9cc22a1df0db748dd7396c9ba5fb5c71a6f0e10ae1d1a7449"
-dependencies = [
- "ark-ec",
- "ark-ff",
- "ark-r1cs-std",
- "ark-std",
-]
-
-[[package]]
 name = "ark-bls12-381"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "70e1c2ad76c4f725520440b981df3ce2d635f2baa1122750c757c0cf0f3d4b74"
 dependencies = [
- "ark-ec",
- "ark-ff",
- "ark-std",
-]
-
-[[package]]
-name = "ark-bw6-761"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69ad8d74a8e083a59defc4a226a19759691337006d5c9397dbd793af9e406418"
-dependencies = [
- "ark-bls12-377",
  "ark-ec",
  "ark-ff",
  "ark-std",
@@ -64,6 +40,17 @@ dependencies = [
  "digest",
  "rayon",
  "tracing",
+]
+
+[[package]]
+name = "ark-dh-commitments"
+version = "0.1.0"
+dependencies = [
+ "ark-ec",
+ "ark-ff",
+ "ark-inner-products",
+ "ark-serialize",
+ "ark-std",
 ]
 
 [[package]]
@@ -149,6 +136,35 @@ dependencies = [
  "derivative",
  "rayon",
  "tracing",
+]
+
+[[package]]
+name = "ark-inner-products"
+version = "0.1.0"
+dependencies = [
+ "ark-ec",
+ "ark-ff",
+ "ark-serialize",
+ "ark-std",
+ "rayon",
+]
+
+[[package]]
+name = "ark-ip-proofs"
+version = "0.1.0"
+dependencies = [
+ "ark-dh-commitments",
+ "ark-ec",
+ "ark-ff",
+ "ark-groth16",
+ "ark-inner-products",
+ "ark-poly",
+ "ark-serialize",
+ "ark-std",
+ "digest",
+ "itertools",
+ "num-traits",
+ "rayon",
 ]
 
 [[package]]
@@ -258,21 +274,20 @@ dependencies = [
 name = "arkworks_learn"
 version = "0.1.0"
 dependencies = [
- "ark-bls12-377",
  "ark-bls12-381",
- "ark-bw6-761",
  "ark-crypto-primitives",
- "ark-ec",
+ "ark-dh-commitments",
  "ark-ed-on-bls12-381",
  "ark-ff",
  "ark-groth16",
+ "ark-inner-products",
+ "ark-ip-proofs",
  "ark-poly",
  "ark-r1cs-std",
  "ark-relations",
  "ark-std",
  "blake2",
  "csv",
- "digest",
 ]
 
 [[package]]
@@ -449,6 +464,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
  "libc",
+]
+
+[[package]]
+name = "itertools"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "69ddb889f9d0d08a67338271fa9b62996bc788c7796a5c18cf057420aaed5eaf"
+dependencies = [
+ "either",
 ]
 
 [[package]]
